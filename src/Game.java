@@ -11,14 +11,33 @@ public class Game {
 	private boolean isSpare(int frameindex) {
 		return rolls[frameindex] + rolls[frameindex] == 10;
 	}
+	
+	private int strikeBonus(int frameindex) {
+		return rolls[frameindex + 1] + rolls[frameindex+ 2];
+	}
+	
+	private boolean isStrike(int frameindex) {
+		return rolls[frameindex] == 10;
+	}
 
 	public int score() {
 		int score = 0;
 		int frameindex = 0;
 		for( int frame=0; frame< 10; ++frame ) {
-			if(isSpare(frameindex)) score += (10 + rolls[frameindex+2]);
-			else score += (rolls[frameindex] + rolls[frameindex+1]);
-			frameindex += 2;
+			// strike
+			if(isStrike(frameindex)) {
+				score += (10 + strikeBonus(frameindex));
+				frameindex += 1;
+			}
+			// spare
+			else if(isSpare(frameindex)) {
+				score += (10 + rolls[frameindex+2]);
+				frameindex += 2;
+			}
+			else {
+				score += (rolls[frameindex] + rolls[frameindex+1]);
+				frameindex += 2;
+			}
 		}
 		return score;
 	}
